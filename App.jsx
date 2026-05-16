@@ -1,120 +1,92 @@
-import React from "react";
-
 export default function BahadirIremGame() {
-  const questions = [
-    "Beni en hızlı sinirlendiren şey",
-    "Bizim ilişkimizi özetleyen şey",
-    "İlgi beklerken diğer kişinin işi çıkmıştır",
-    "En dramatik olduğumuz an",
-    "Birbirimize en çok söylediğimiz şey",
-    "Bu ilişkide en çok kim kıskanç?",
-    "Tartışma sonrası ilk yapılan şey",
-    "Bizi anlatan kelime"
-  ];
-
-  const allAnswers = [
-    "Anlaşılmamak",
-    "Funda ile buluşmadan bahsedilmesi",
-    "Anlayış",
-    "Bağlılık",
-    "Tutku",
-    "Trip atarım",
-    "Küserim",
-    "Döverim 😭",
-    "Ağlarım",
-    "Bebek zombi",
-    "Sincabım",
-    "Koalam",
-    "Eşşek",
-    "Ayı",
-    "Fil",
-    "Maymun"
-  ];
-
-  const randomCards = () => {
-    const shuffled = [...allAnswers].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 6);
-  };
-
-  const randomQuestion = () => {
-    return questions[Math.floor(Math.random() * questions.length)];
-  };
-
-  const [started, setStarted] = React.useState(false);
-  const [finished, setFinished] = React.useState(false);
-  const [question, setQuestion] = React.useState(randomQuestion());
-  const [player1, setPlayer1] = React.useState(randomCards());
-  const [player2, setPlayer2] = React.useState(randomCards());
-  const [selected1, setSelected1] = React.useState(null);
-  const [selected2, setSelected2] = React.useState(null);
-
-  const nextRound = () => {
-    setQuestion(randomQuestion());
-    setPlayer1(randomCards());
-    setPlayer2(randomCards());
-    setSelected1(null);
-    setSelected2(null);
-  };
-
-  if (finished) {
-    return (
-      <div style={{padding:40,textAlign:"center"}}>
-        <h1>💖 Bahadır & İrem 💖</h1>
-        <p>
-          Doğum günün kutlu olsun hayatım tekrar ve tekrardan seni çok çok çoook seviyorum 💕
-        </p>
-      </div>
-    );
-  }
-
-  if (!started) {
-    return (
-      <div style={{padding:40,textAlign:"center"}}>
-        <h1>Bahadır & İrem</h1>
-        <button onClick={() => setStarted(true)}>Oyuna Başla 💌</button>
       </div>
     );
   }
 
   return (
-    <div style={{padding:20}}>
-      <h2>{question}</h2>
+    <>
+      <audio
+        ref={audioRef}
+        loop
+        autoPlay
+        src="/barbar.mp3"
+      />
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 to-blue-100 p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold text-pink-700">💖 Bahadır & İrem</h1>
 
-      <div style={{display:"flex",gap:20}}>
-        <div>
-          <h3>Bahadır</h3>
-          {player1.map((card,index)=>(
-            <button
-              key={index}
-              onClick={()=>setSelected1(card)}
-              style={{display:"block",marginBottom:10}}
-            >
-              {card}
-            </button>
-          ))}
-        </div>
+        <button
+          onClick={() => setMusicOn(!musicOn)}
+          className="bg-white/50 px-4 py-2 rounded-xl shadow"
+        >
+          {musicOn ? "🎵" : "🔇"}
+        </button>
+      </div>
 
-        <div>
-          <h3>İrem</h3>
-          {player2.map((card,index)=>(
-            <button
-              key={index}
-              onClick={()=>setSelected2(card)}
-              style={{display:"block",marginBottom:10}}
-            >
-              {card}
-            </button>
-          ))}
+      <div className="text-center mb-6">
+        <div className="bg-white/50 backdrop-blur-xl rounded-3xl p-6 shadow-xl inline-block max-w-md">
+          <p className="text-sm text-gray-500 mb-2">Tur {round}/10</p>
+          <h2 className="text-2xl font-bold text-pink-700">{question}</h2>
         </div>
       </div>
 
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="bg-white/40 rounded-3xl p-4 shadow-xl">
+          <h3 className="text-xl font-bold text-center mb-4 text-pink-600">Bahadır 🩵</h3>
+          <div className="grid gap-3">
+            {player1.map((card, index) => (
+              <button
+                key={index}
+                onClick={() => selectCard(1, card)}
+                className="bg-pink-200 hover:scale-105 transition rounded-2xl p-3 shadow"
+              >
+                {card}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white/40 rounded-3xl p-4 shadow-xl">
+          <h3 className="text-xl font-bold text-center mb-4 text-blue-600">İrem 🌸</h3>
+          <div className="grid gap-3">
+            {player2.map((card, index) => (
+              <button
+                key={index}
+                onClick={() => selectCard(2, card)}
+                className="bg-blue-200 hover:scale-105 transition rounded-2xl p-3 shadow"
+              >
+                {card}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {(selected1 || selected2) && (
+        <div className="bg-white/50 backdrop-blur-xl rounded-3xl p-6 shadow-xl text-center mb-6 max-w-lg mx-auto animate-bounce">
+          <h3 className="text-xl font-bold mb-4 text-pink-700">Seçilen Kartlar 💌</h3>
+          <div className="space-y-3">
+            {selected1 && (
+              <div className="bg-pink-200 rounded-2xl p-3">🩵 Bahadır: {selected1}</div>
+            )}
+            {selected2 && (
+              <div className="bg-blue-200 rounded-2xl p-3">🌸 İrem: {selected2}</div>
+            )}
+          </div>
+        </div>
+      )}
+
       {selected1 && selected2 && (
-        <div style={{marginTop:30}}>
-          <p>🩵 Bahadır: {selected1}</p>
-          <p>🌸 İrem: {selected2}</p>
-          <button onClick={nextRound}>Sonraki Tur ✨</button>
+        <div className="text-center">
+          <button
+            onClick={nextRound}
+            className="bg-gradient-to-r from-pink-500 to-blue-400 text-white px-8 py-4 rounded-2xl text-xl shadow-2xl hover:scale-105 transition"
+          >
+            Sonraki Tur ✨
+          </button>
         </div>
       )}
     </div>
-  );
+        </>
+    );
 }
